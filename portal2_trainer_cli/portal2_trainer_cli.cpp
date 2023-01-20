@@ -22,9 +22,9 @@
 
 // ==============================================
 
-constexpr const wchar_t* GLOBAL_MUTEX_NAME           = L"MUTEX_PORTAL2_TRAINER_EGGTARTC";
-constexpr const wchar_t* GLOBAL_TARGET_PROCESS       = L"portal2.exe";
-constexpr const char*    GLOBAL_TARGET_PROCESS_ANSI  = "portal2.exe";
+const static wchar_t* GLOBAL_MUTEX_NAME           = L"MUTEX_PORTAL2_TRAINER_EGGTARTC";
+const static wchar_t* GLOBAL_TARGET_PROCESS       = L"portal2.exe";
+const static char*    GLOBAL_TARGET_PROCESS_ANSI  = "portal2.exe";
 
 typedef struct {
     LPVOID client_base;
@@ -89,7 +89,7 @@ DWORD __stdcall remote_payload(LPVOID lparam) {
     int string_length = command->string_length;
 
     // char __thiscall sub_5FB5A380(_DWORD * this, void* a2, int a3)
-    // `this` should not be passed directly - it is automatically assigned by ECX.
+    // x64 __fastcall: ecx, rdx, r8, r9
     // `a2` the string buffer.
     // `a3` the string length.
     DWORD remote_console_addr = command->remote_addr;
@@ -107,7 +107,7 @@ DWORD __stdcall remote_payload(LPVOID lparam) {
 
         mov ecx, ecx_value;  // engine.dll+674638, Command history that seperated by '\0'.
                              // ecx must be set as the call convension is `thiscall`.
-                             // ecx represents the `this` pointer.
+                             // ecx represents the `this` pointer (first parameter).
 
         push string_length;
         push string_buffer;
@@ -160,7 +160,7 @@ HANDLE wait_for_process()
 
 	log_info("Opening process...");
 
-    // I will never forget this number :)
+    // 真男人直接魔法数字，梦回易语言写挂（
 	return OpenProcess(2035711, FALSE, process_id);
 }
 
@@ -312,6 +312,7 @@ int main(int argc, const char** argv) {
         set_sv_allow_mobile_portals(process_handle, &bases, 1)
     );
 
+    // 但是这个有时候不灵呢，不知道咋回事
     ENABLE_FEATURE(
         "\"God Mode\" Switch",
         "Press `g` to toggle invincible mode.",
