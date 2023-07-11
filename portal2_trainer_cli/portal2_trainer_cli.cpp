@@ -206,9 +206,9 @@ void run_developer_console_command(HANDLE process_handle, portal2_dll_base* base
     // Inject struct.
     ConsoleCommand param = {
         .engine_base = reinterpret_cast<DWORD>(bases->engine_base),
-        .remote_addr = reinterpret_cast<DWORD>(bases->engine_base) + 0x28A380, // +0x28A2A0;
+        .remote_addr = reinterpret_cast<DWORD>(bases->engine_base) + 0x28A2C0,
         .string_buffer = reinterpret_cast<char*>(remote_string_addr),
-        .string_length = string_size - 1
+        .string_length = string_size
     };
 
     LPVOID remote_command_addr = VirtualAllocEx(process_handle, NULL, sizeof(ConsoleCommand), MEM_COMMIT, PAGE_READWRITE);

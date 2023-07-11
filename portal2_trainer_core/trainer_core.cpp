@@ -27,10 +27,15 @@ namespace trainer_core {
 		}
 
 		DWORD ret = 0;
+		BOOL bypass_first = FALSE;
 
 		if (Process32First(snapshot, &process_entry)) {
 			while (Process32Next(snapshot, &process_entry)) {
 				if (!wcscmp(process_entry.szExeFile, name)) {
+					if (bypass_first) {
+						bypass_first = false;
+						continue;
+					}
 					ret = process_entry.th32ProcessID;
 					break;
 				}
